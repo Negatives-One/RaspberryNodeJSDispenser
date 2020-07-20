@@ -1,10 +1,11 @@
-// primeiro é necessário importar as dependência
+// primeiro é necessário importar as dependências
 var http = require('http');
 var express = require('express');
 var piblaster = require('pi-blaster.js');
 
 // Chame o express para criar um servidor de aplicações como objeto
 var app = express();
+//podia ser: var app = require('express')(); e não precisaria das linhas 3 e 7
 //const server = http.createServer(app);
 
 // Em seguida, configure o express para servir o arquivo index.html e quaisquer outras páginas estáticas 
@@ -16,12 +17,11 @@ app.get("/", function(req, res) { // quando o usuário enviar uma requisição p
     res.sendfile("index.html");
 });
 
-// Use a função GET para abrir e fechar a caixa. Ela vai passar o valor do duty cycle pro servo através do pino 22
+// Use a função GET para abrir e fechar a caixa. 
 app.get('/lock.html', function(req, res) { // ao acessar pelo web client, irá fechar
-    piblaster.setPwm(22, 0.145);
+    piblaster.setPwm(22, 0.14); //passa o valor do duty cycle pro servo através do pino 22
     res.end('O dispensador está fechado');
 });
-
 
 app.get('/unlock.html', function(req, res) { // ao acessar pelo web client, irá abrir
     piblaster.setPwm(22, 0.1);
@@ -30,7 +30,7 @@ app.get('/unlock.html', function(req, res) { // ao acessar pelo web client, irá
 
 // reportar os erros
 app.get('*', function(req, res) {
-    res.status(404).send('Chamada de API não reconhecida');
+    res.status(404).send('Chamada API não reconhecida');
 });
 
 app.use(function(err, req, res, next) {
@@ -43,7 +43,7 @@ app.use(function(err, req, res, next) {
 //para parar a execução use o comando CTRL+C 
 process.on('SIGINT', function() {
     var i;
-    console.log("\nGracefully shutting down from SIGINT (Ctrl+C)");
+    console.log("\n Saindo do Aplicativo (Ctrl+C)");
     process.exit();
 });
 
