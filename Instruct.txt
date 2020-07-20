@@ -1,0 +1,75 @@
+* 1° - é preciso instalar o  NodeJS
+* 2° - execute as seguintes instruções no terminal
+
+mkdir ServoApp              (pode ser qualquer nome, esse comando vai criar uma pasta) // isso n precisa fazer pq eu já criei a pasta
+cd ServoApp                 (muda para o diretório da Pasta criada)
+
+npm init                    (esse comando irá iniciar o npm no diretório do projeto e instalar o connect e o express)
+npm install express --save
+npm install connect --save
+npm install socket.io --save
+
+* 3° - é necessário instalar o Pi-Blaster pois ele vai ajudar a gerar modulações por largura de pulso (PWM)
+
+cd
+git clone https://github.com/sarfata/pi-blaster.git
+cd pi-blaster
+
+*obs: Ao usar o Pi-Blaster, ele irá automaticamente criar 8 pinos de PWM(nos pinos GPIO 4, 17, 18, 21, 22, 
+23, 24 25), então não será possível usar esse pinos para nenhuma outra função GPIO. Logo, será necessário 
+alterar o código fonte do arquivo que foi passado para o raspberry.
+
+* No arquivo pi-blaster.c, perto da linha 50 do código estará a seguinte lista 
+
+// Created new known_pins with raspberry pi list of pins 
+// to compare against the param received. 
+static uint8_t known_pins[] = { 
+4, // P1-7 
+17, // P1-11 
+18, // P1-12 
+27, // P1-13 
+21, // P1-13 
+22, // P1-15 
+23, // P1-16 
+24, // P1-18 
+25, // P1-22 
+};
+
+* 4° - A parte do código que foi mostrado acima é responsável por definir o pinos a serem usados como PWM, é
+necessário mudá-lo para configurar apenas os pinos que nós queremos usar. No caso, será o pino 22.
+
+// Created new known_pins with raspberry pi list of pins 
+// to compare against the param received. 
+static uint8_t known_pins[] = {  
+22, // P1-15 
+};
+
+* 5° - Após modificar o código fonte, será necessário compilar e instalar. Siga as seguintes instruções:
+
+cd
+sudo apt-get install autoconf
+cd pi-blaster
+./autogen.sh
+./configure
+make
+sudo make install;
+
+* 6° - Para checar se o arquivo foi instalado correntamente, execute o seguinte comando:
+
+echo "22=0.1" > /dev/pi-blaster
+
+* O comando acima irá atribuir o valor 0.1 ao pino 22, o que significa um duty cycle de 10%. Modifique os
+valores para ver como o servo irá responder.
+
+*OBS!!!!!!!!!: Depois disso, o pino GPIO 22 servirá apenas para PWM, não será possível atribuir nenhuma outra
+função a ele. Então, caso queira desinstalar o pi-blaster após a execução do projeto, vá ao diretório onde ele
+foi instalado e execute o seguinte comando:
+
+sudo make uninstall
+
+Isso vai fazer com que o pi-blaster não seja executado automaticamente na próxima reiniciação.
+
+* 7° - Agoa será necessário instalar o pacote do pi-blaster para o NodeJS.Vá ao diretório do projeto (ServoApp)
+e execute o seguinte comando:
+
+npm install pi-blaster.js --save
