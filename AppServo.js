@@ -46,6 +46,21 @@ process.on('SIGINT', function() {
     console.log("\n Saindo do Aplicativo (Ctrl+C)");
     process.exit();
 });
+//código responsável pela leitura do LDR
+const SerialPort = require("serialport");
+const ReadLine = require("@serialport/parser-readline");
+
+//2° passo: definir a porta serial
+const porta = new SerialPort("/dev/ttyACM0", { baudRate: 9600 });
+
+//3° passo definir o ReadLine parser... Definir o serial port parser
+const Parser = new ReadLine();
+porta.pipe(Parser);
+
+//4°passo: Ler os dados da porta serial
+Parser.on('data', function(dados) {
+    console.log(dados);
+});
 
 // tornar o servidor acessível na porta 3000
 app.listen(3000);
