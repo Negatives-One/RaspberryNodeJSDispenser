@@ -6,10 +6,10 @@ socket.on('ldr', function(data) {
     let ldr = document.getElementById('LDR');
     var x = data;
     if (x >= 500) {
-        ldr.innerHTML = `Ração Em Falta`;
+        ldr.innerHTML = `Nível de Ração: OK!`;
     }
     if (x < 500) {
-        ldr.innerHTML = `Nível de Ração: OK!`;
+        ldr.innerHTML = `Ração Em Falta`;
     }
 
 });
